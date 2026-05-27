@@ -85,3 +85,26 @@ async def get_stats_today() -> int:
         )
         row = await cursor.fetchone()
         return row[0] if row else 0
+
+
+async def reset_seen_jobs() -> int:
+    """Delete all records from seen_jobs. Returns number of deleted rows."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute("DELETE FROM seen_jobs")
+        await db.commit()
+        deleted = cursor.rowcount
+    logger.info("reset_seen_jobs: deleted %d records", deleted)
+    return deleted
+
+
+async def cleanup_old_jobs(days: int = 30) -> int:
+    """Delete seen_jobs records older than `days` days. Returns number of deleted rows."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
+            "DELETE FROM seen_jobs WHERE sent_at < DATETIME('now', ? || ' days')",
+            (f"-{days}",),
+        )
+        await db.commit()
+        deleted = cursor.rowcount
+    logger.info("Cleanup: deleted %d old records (older than %d days)", deleted, days)
+    return deleted

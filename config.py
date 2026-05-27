@@ -12,25 +12,27 @@ DATA_DIR.mkdir(exist_ok=True)
 
 BOT_TOKEN: str = os.environ["BOT_TOKEN"]
 MY_TELEGRAM_ID: int = int(os.environ["MY_TELEGRAM_ID"])
-TG_API_ID: int = int(os.environ["TG_API_ID"])
-TG_API_HASH: str = os.environ["TG_API_HASH"]
+# TG_API_ID: int = int(os.environ["TG_API_ID"])
+# TG_API_HASH: str = os.environ["TG_API_HASH"]
 
 DB_PATH: str = str(DATA_DIR / "jobs.db")
-SESSION_PATH: str = str(DATA_DIR / "telethon")
+# SESSION_PATH: str = str(DATA_DIR / "telethon")
 
 HH_CHECK_INTERVAL_MINUTES: int = 10
 TG_CHECK_INTERVAL_MINUTES: int = 5
 
-HH_API_URL: str = "https://api.hh.ru/vacancies"
-HH_HEADERS: dict[str, str] = {"User-Agent": "job-monitor-bot/1.0 (personal use)"}
-HH_PARAMS: dict = {
-    "text": "Python developer",
+HH_RSS_URL: str = "https://hh.ru/search/vacancy/rss"
+HH_HEADERS: dict[str, str] = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/rss+xml, application/xml, text/xml",
+}
+HH_RSS_PARAMS: dict = {
+    "text": "Python developer OR Python разработчик",
     "area": [1, 2],
     "experience": ["between1And3", "between3And6"],
-    "schedule": ["remote", "hybridRemote"],
+    "schedule": ["remote", "flexible", "fullDay"],
     "order_by": "publication_time",
-    "per_page": 20,
-    "page": 0,
+    "items_on_page": 20,
 }
 
 TG_CHANNELS: list[str] = [
